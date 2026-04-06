@@ -22,6 +22,7 @@ if(NOT LDF_LIB_DIR)
     set(LDF_LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib" CACHE PATH
         "Directory containing prebuilt libldfextract.a and generated .pb.h files")
 endif()
+get_filename_component(LDF_LIB_DIR "${LDF_LIB_DIR}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_library(ldfextract STATIC IMPORTED GLOBAL)
 set_target_properties(ldfextract PROPERTIES
