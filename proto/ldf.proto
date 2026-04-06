@@ -1,0 +1,166 @@
+syntax = "proto3";
+package ldf.v1;
+import "common.proto";
+
+// Root message representing a parsed LDF file
+message LdfFile {
+  string lin_protocol_version = 1;      // e.g. "2.2"
+  string lin_language_version = 2;      // e.g. "2.2"
+  double lin_speed_kbps = 3;            // e.g. 19.2
+  string channel_name = 4;             // optional, e.g. "DB"
+  string ldf_file_revision = 5;        // ISO 17987, e.g. "14.23.01"
+  bool big_endian_signals = 6;         // LIN_sig_byte_order_big_endian present
+
+  Node master = 7;
+  repeated Node slaves = 8;
+  repeated Signal signals = 9;
+  repeated Frame frames = 10;
+  repeated SignalEncodingType signal_encoding_types = 11;
+  repeated ScheduleTable schedule_tables = 12;
+  repeated EventTriggeredFrame event_triggered_frames = 13;
+  repeated DiagnosticAddress diagnostic_addresses = 14;
+  repeated SignalGroup signal_groups = 15;
+  repeated DiagnosticSignal diagnostic_signals = 16;   // ISO 17987
+  repeated DiagnosticFrame diagnostic_frames = 17;     // ISO 17987
+}
+
+// LIN bus node (master or slave)
+message Node {
+  string name = 1;
+  NodeRole role = 2;
+  // Master-specific fields
+  double timebase_ms = 3;              // master timebase (ms)
+  double jitter_ms = 4;                // master jitter (ms)
+  // J2602 master extensions
+  uint32 max_frame_bits = 5;           // e.g. 24 bits
+  double duty_cycle_pct = 6;           // e.g. 30 %
+  // Slave node attributes (from Node_attributes section)
+  NodeAttributes attributes = 7;
+}
+
+// Slave node configuration from Node_attributes section
+message NodeAttributes {
+  string lin_protocol = 1;             // e.g. "2.0"
+  uint32 configured_nad = 2;           // configured NAD
+  uint32 initial_nad = 3;              // initial NAD (optional)
+  repeated uint32 product_id = 4;      // supplier_id, function_id [, variant]
+  string response_error = 5;           // signal name for response error
+  repeated string fault_state_signals = 6;
+  double p2_min_ms = 7;
+  double st_min_ms = 8;
+  double n_as_timeout_ms = 9;
+  double n_cr_timeout_ms = 10;
+  repeated ConfigurableFrame configurable_frames = 11;
+  // J2602 extensions
+  double response_tolerance_pct = 12;  // e.g. 38 %
+  double wakeup_time_ms = 13;
+  double poweron_time_ms = 14;
+}
+
+message ConfigurableFrame {
+  string frame_name = 1;
+  uint32 message_id = 2;              // assigned frame ID (optional)
+  bool has_message_id = 3;
+}
+
+// Signal definition from Signals section
+message Signal {
+  string name = 1;
+  uint32 bit_length = 2;
+  int64 init_value = 3;
+  string publisher = 4;
+  repeated string subscribers = 5;
+  // Enriched from Frames section
+  string frame_name = 6;
+  uint32 frame_id = 7;
+  uint32 start_bit = 8;
+  // Enriched from Signal_encoding_types via Signal_representation
+  SignalEncoding encoding = 9;
+}
+
+// Physical + logical encoding for a signal
+message SignalEncoding {
+  string encoding_name = 1;
+  repeated PhysicalValue physical_values = 2;  // piecewise ranges
+  repeated LogicalValue logical_values = 3;
+}
+
+message PhysicalValue {
+  uint64 min_raw = 1;
+  uint64 max_raw = 2;
+  double factor = 3;
+  double offset = 4;
+  string unit = 5;
+}
+
+message LogicalValue {
+  int64 value = 1;
+  string description = 2;
+}
+
+// Frame definition from Frames section
+message Frame {
+  string name = 1;
+  uint32 id = 2;                       // LIN frame ID (0-63)
+  string publisher = 3;
+  uint32 length = 4;                   // frame length in bytes (0 = unspecified)
+  repeated FrameSignal signals = 5;
+}
+
+message FrameSignal {
+  string signal_name = 1;
+  uint32 start_bit = 2;
+}
+
+// Signal encoding type block from Signal_encoding_types section
+message SignalEncodingType {
+  string name = 1;
+  repeated PhysicalValue physical_values = 2;  // piecewise ranges
+  repeated LogicalValue logical_values = 3;
+}
+
+// Schedule table from Schedule_tables section
+message ScheduleTable {
+  string name = 1;
+  repeated ScheduleEntry entries = 2;
+}
+
+message ScheduleEntry {
+  string command = 1;                  // frame name or diagnostic command
+  double delay_ms = 2;
+}
+
+// Event-triggered frame definition
+message EventTriggeredFrame {
+  string name = 1;
+  string collision_resolver = 2;       // schedule table name
+  uint32 id = 3;                       // frame ID
+  repeated string associated_frames = 4;
+}
+
+// Diagnostic address assignment (LIN 1.3)
+message DiagnosticAddress {
+  string node_name = 1;
+  uint32 nad = 2;
+}
+
+// Signal group definition
+message SignalGroup {
+  string name = 1;
+  uint32 group_size = 2;              // group size in bits
+  repeated FrameSignal signals = 3;
+}
+
+// Diagnostic signal (ISO 17987)
+message DiagnosticSignal {
+  string name = 1;
+  uint32 bit_length = 2;
+  int64 init_value = 3;
+}
+
+// Diagnostic frame (ISO 17987)
+message DiagnosticFrame {
+  string name = 1;
+  uint32 id = 2;                       // e.g. 0x3c, 0x3d
+  repeated FrameSignal signals = 3;
+}
