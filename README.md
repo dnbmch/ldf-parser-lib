@@ -4,6 +4,37 @@ Prebuilt static library, public headers, and protobuf schema for the **ldf-parse
 
 **Author:** Danube Mechatronics Kft.
 
+## Downloads
+
+Prebuilt static libraries are available on the [Releases](https://github.com/dnbmch/ldf-parser-lib/releases) page:
+
+| Artifact | Platform |
+|----------|----------|
+| `ldfextract-x86_64-windows-mingw` | Windows MinGW GCC (.a) |
+| `ldfextract-x86_64-linux-gnu` | Linux x86_64 (.a) |
+| `ldfextract-aarch64-linux-gnu` | Linux ARM64 (.a) |
+| `ldfextract-headers` | Public headers and proto files |
+
+## Quick Start
+
+```bash
+# 1. Clone this repo
+git clone https://github.com/dnbmch/ldf-parser-lib.git
+cd ldf-parser-lib
+
+# 2. Download and extract the prebuilt library for your platform
+#    (from the Releases page, extract into lib/)
+mkdir -p lib
+tar xzf ldfextract-x86_64-linux-gnu-v0.2.0.tar.gz -C lib/
+
+# 3. Build the examples
+cmake -B build -DLDF_LIB_DIR=lib
+cmake --build build
+
+# 4. Run
+./build/ldf_basic path/to/file.ldf
+```
+
 ## Contents
 
 | Directory | Description |
@@ -12,7 +43,7 @@ Prebuilt static library, public headers, and protobuf schema for the **ldf-parse
 | `proto/` | Protobuf schema files (`.proto`) for multi-language binding generation |
 | `examples/` | Example applications (basic summary, JSON export, signal dump) |
 
-## Quick Start
+## Integration
 
 ```cpp
 #include "ldffile.h"
