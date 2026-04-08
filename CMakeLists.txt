@@ -1,11 +1,12 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.15)
 project(ldfextract-lib LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+cmake_policy(SET CMP0091 NEW)
 
 # ---------------------------------------------------------------------------
-# Find protobuf (needed for proto generation and linking)
+# Find protobuf (needed for linking)
 # ---------------------------------------------------------------------------
 find_package(Protobuf CONFIG QUIET)
 if(NOT TARGET protobuf::libprotobuf)
@@ -16,17 +17,26 @@ find_package(absl CONFIG QUIET)
 # ---------------------------------------------------------------------------
 # Prebuilt static library
 # ---------------------------------------------------------------------------
-# Set LDF_LIB_DIR to the directory containing libldfextract.a
-# e.g. cmake -B build -DLDF_LIB_DIR=lib
 if(NOT LDF_LIB_DIR)
     set(LDF_LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib" CACHE PATH
-        "Directory containing prebuilt libldfextract.a and generated .pb.h files")
+        "Directory containing prebuilt ldfextract library and generated .pb.h files")
 endif()
 get_filename_component(LDF_LIB_DIR "${LDF_LIB_DIR}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
+find_library(LDF_LIB_PATH NAMES ldfextract PATHS "${LDF_LIB_DIR}" NO_DEFAULT_PATH)
+if(NOT LDF_LIB_PATH)
+    if(EXISTS "${LDF_LIB_DIR}/libldfextract.a")
+        set(LDF_LIB_PATH "${LDF_LIB_DIR}/libldfextract.a")
+    elseif(EXISTS "${LDF_LIB_DIR}/ldfextract.lib")
+        set(LDF_LIB_PATH "${LDF_LIB_DIR}/ldfextract.lib")
+    else()
+        message(FATAL_ERROR "Could not find ldfextract library in ${LDF_LIB_DIR}")
+    endif()
+endif()
+
 add_library(ldfextract STATIC IMPORTED GLOBAL)
 set_target_properties(ldfextract PROPERTIES
-    IMPORTED_LOCATION "${LDF_LIB_DIR}/libldfextract.a"
+    IMPORTED_LOCATION "${LDF_LIB_PATH}"
 )
 
 target_include_directories(ldfextract INTERFACE
