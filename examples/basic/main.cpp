@@ -8,8 +8,8 @@
 //       gen/common.pb.cc gen/ldf.pb.cc \
 //       -L /c/msys64/mingw64/lib -lprotobuf.dll -o basic_example.exe
 
-#include "ldffile.h"
-#include "extract.h"
+#include "ldf/ldffile.h"
+#include "ldf/extract.h"
 
 #include <iostream>
 #include <string>
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Step 2: Extract into typed protobuf messages
-    ldf::v1::LdfFile file = extract::extractFile(raw.get());
+    ldf::LdfFile file = ldf::extract::extractFile(raw.get());
 
     // Step 3: Walk the extracted data
     std::cout << "=== LDF File Summary ===\n";

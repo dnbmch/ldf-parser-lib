@@ -11,8 +11,8 @@
 //       ldfparser_dnbm/extract_encoding.cpp gen/common.pb.cc gen/ldf.pb.cc \
 //       -L /c/msys64/mingw64/lib -lprotobuf.dll -o json_export.exe
 
-#include "ldffile.h"
-#include "extract.h"
+#include "ldf/ldffile.h"
+#include "ldf/extract.h"
 
 #include <google/protobuf/util/json_util.h>
 
@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
         std::cerr << "Failed to parse: " << argv[1] << "\n";
         return 1;
     }
-    ldf::v1::LdfFile file = extract::extractFile(raw.get());
+    ldf::LdfFile file = ldf::extract::extractFile(raw.get());
 
     // Configure JSON output
     google::protobuf::util::JsonPrintOptions opts;

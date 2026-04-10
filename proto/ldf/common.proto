@@ -1,5 +1,5 @@
 syntax = "proto3";
-package ldf.v1;
+package ldf;
 
 // Signal encoding value type
 enum SignalValueType {

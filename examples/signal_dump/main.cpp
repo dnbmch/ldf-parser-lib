@@ -11,8 +11,8 @@
 //       ldfparser_dnbm/extract_encoding.cpp gen/common.pb.cc gen/ldf.pb.cc \
 //       -L /c/msys64/mingw64/lib -lprotobuf.dll -o signal_dump.exe
 
-#include "ldffile.h"
-#include "extract.h"
+#include "ldf/ldffile.h"
+#include "ldf/extract.h"
 
 #include <iomanip>
 #include <iostream>
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
         std::cerr << "Failed to parse: " << argv[1] << "\n";
         return 1;
     }
-    ldf::v1::LdfFile file = extract::extractFile(raw.get());
+    ldf::LdfFile file = ldf::extract::extractFile(raw.get());
 
     // Header
     printRow("SIGNAL", "FRAME", 0, 0, 0, "FACTOR", "OFFSET", "UNIT", "PUBLISHER", "ENCODING");

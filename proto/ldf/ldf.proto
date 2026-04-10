@@ -1,6 +1,6 @@
 syntax = "proto3";
-package ldf.v1;
-import "common.proto";
+package ldf;
+import "ldf/common.proto";
 
 // Root message representing a parsed LDF file
 message LdfFile {
