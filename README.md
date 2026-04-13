@@ -13,6 +13,7 @@ Prebuilt static libraries are available on the [Releases](https://github.com/dnb
 | `ldfextract-x86_64-windows-mingw` | Windows MinGW GCC (.a) |
 | `ldfextract-x86_64-linux-gnu` | Linux x86_64 (.a) |
 | `ldfextract-aarch64-linux-gnu` | Linux ARM64 (.a) |
+| `ldfextract-x86_64-windows-msvc` | Windows MSVC (.lib) |
 | `ldfextract-headers` | Public headers and proto files |
 
 ## Quick Start
