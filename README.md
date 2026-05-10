@@ -47,11 +47,11 @@ cmake --build build
 ## Integration
 
 ```cpp
-#include "ldffile.h"
-#include "extract.h"
+#include "ldf/ldffile.h"
+#include "ldf/extract.h"
 
 auto file = ldffile::Loader::readLdfFile("path/to/file.ldf");
-ldf::v1::LdfFile result = extract::extractFile(file.get());
+ldf::LdfFile result = ldf::extract::extractFile(file.get());
 
 for (const auto& frame : result.frames()) {
     // Access signals, encodings, schedule tables, etc.
