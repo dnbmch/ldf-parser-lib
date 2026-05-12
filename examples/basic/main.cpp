@@ -1,12 +1,8 @@
-// examples/basic/main.cpp
+// lib/examples/basic/main.cpp
 // Basic integration example: parse LDF file, walk extracted protobuf data.
 //
-// Build (from project root):
-//   g++ -std=c++17 -O2 -I ldfparser_dnbm -I gen -I /c/msys64/mingw64/include \
-//       examples/basic/main.cpp ldfparser_dnbm/ldffile.cpp ldfparser_dnbm/extract.cpp \
-//       ldfparser_dnbm/extract_frame.cpp ldfparser_dnbm/extract_encoding.cpp \
-//       gen/common.pb.cc gen/ldf.pb.cc \
-//       -L /c/msys64/mingw64/lib -lprotobuf.dll -o basic_example.exe
+// Built by the main CMakeLists.txt as the `ldf_example_basic` target; the
+// `ldf_example_basic` ctest entry runs it against a fixture LDF.
 
 #include "ldf/ldffile.h"
 #include "ldf/extract.h"

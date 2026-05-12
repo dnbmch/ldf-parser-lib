@@ -1,15 +1,10 @@
-// examples/signal_dump/main.cpp
+// lib/examples/signal_dump/main.cpp
 // Signal dump CLI: parse LDF and print a flat signal table for quick reference.
 //
 // Output format (TSV-like):
 //   SIGNAL_NAME  FRAME  ID  START_BIT  BITS  FACTOR  OFFSET  UNIT  PUBLISHER  ENCODING
 //
-// Build (from project root):
-//   g++ -std=c++17 -O2 -I ldfparser_dnbm -I gen -I /c/msys64/mingw64/include \
-//       examples/signal_dump/main.cpp ldfparser_dnbm/ldffile.cpp \
-//       ldfparser_dnbm/extract.cpp ldfparser_dnbm/extract_frame.cpp \
-//       ldfparser_dnbm/extract_encoding.cpp gen/common.pb.cc gen/ldf.pb.cc \
-//       -L /c/msys64/mingw64/lib -lprotobuf.dll -o signal_dump.exe
+// Built by the main CMakeLists.txt as the `ldf_example_signal_dump` target.
 
 #include "ldf/ldffile.h"
 #include "ldf/extract.h"

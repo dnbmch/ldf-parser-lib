@@ -1,15 +1,10 @@
-// examples/json_export/main.cpp
+// lib/examples/json_export/main.cpp
 // JSON export example: parse LDF -> extract -> serialize to JSON via protobuf.
 //
 // Uses protobuf's built-in JSON serialization (MessageToJsonString).
 // Output can be consumed by Python, web UIs, databases, etc.
 //
-// Build (from project root):
-//   g++ -std=c++17 -O2 -I ldfparser_dnbm -I gen -I /c/msys64/mingw64/include \
-//       examples/json_export/main.cpp ldfparser_dnbm/ldffile.cpp \
-//       ldfparser_dnbm/extract.cpp ldfparser_dnbm/extract_frame.cpp \
-//       ldfparser_dnbm/extract_encoding.cpp gen/common.pb.cc gen/ldf.pb.cc \
-//       -L /c/msys64/mingw64/lib -lprotobuf.dll -o json_export.exe
+// Built by the main CMakeLists.txt as the `ldf_example_json_export` target.
 
 #include "ldf/ldffile.h"
 #include "ldf/extract.h"
