@@ -10,11 +10,11 @@ Prebuilt static libraries are available on the [Releases](https://github.com/dnb
 
 | Artifact | Platform |
 |----------|----------|
-| `ldfextract-x86_64-windows-mingw` | Windows MinGW GCC (.a) |
-| `ldfextract-x86_64-linux-gnu` | Linux x86_64 (.a) |
-| `ldfextract-aarch64-linux-gnu` | Linux ARM64 (.a) |
-| `ldfextract-x86_64-windows-msvc` | Windows MSVC (.lib) |
-| `ldfextract-headers` | Public headers and proto files |
+| `ldfparser-x86_64-windows-mingw` | Windows MinGW GCC (.a) |
+| `ldfparser-x86_64-linux-gnu` | Linux x86_64 (.a) |
+| `ldfparser-aarch64-linux-gnu` | Linux ARM64 (.a) |
+| `ldfparser-x86_64-windows-msvc` | Windows MSVC (.lib) |
+| `ldfparser-headers` | Public headers and proto files |
 
 ## Quick Start
 
@@ -26,7 +26,7 @@ cd ldf-parser-lib
 # 2. Download and extract the prebuilt library for your platform
 #    (from the Releases page, extract into lib/)
 mkdir -p lib
-tar xzf ldfextract-x86_64-linux-gnu-v0.3.0.tar.gz -C lib/
+tar xzf ldfparser-x86_64-linux-gnu-v0.3.0.tar.gz -C lib/
 
 # 3. Build the examples
 cmake -B build -DLDF_LIB_DIR=lib

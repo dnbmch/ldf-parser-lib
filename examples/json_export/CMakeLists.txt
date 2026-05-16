@@ -4,4 +4,4 @@ project(ldf_json_example LANGUAGES CXX)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../.. ${CMAKE_CURRENT_BINARY_DIR}/ldfparser)
 
 add_executable(ldf_json main.cpp)
-target_link_libraries(ldf_json PRIVATE ldfextract)
+target_link_libraries(ldf_json PRIVATE ldfparser)

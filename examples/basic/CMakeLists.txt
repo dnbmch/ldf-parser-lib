@@ -6,4 +6,4 @@ project(ldf_basic_example LANGUAGES CXX)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../.. ${CMAKE_CURRENT_BINARY_DIR}/ldfparser)
 
 add_executable(ldf_basic main.cpp)
-target_link_libraries(ldf_basic PRIVATE ldfextract)
+target_link_libraries(ldf_basic PRIVATE ldfparser)
