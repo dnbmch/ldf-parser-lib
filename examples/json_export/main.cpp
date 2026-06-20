@@ -4,7 +4,7 @@
 // Uses protobuf's built-in JSON serialization (MessageToJsonString).
 // Output can be consumed by Python, web UIs, databases, etc.
 //
-// Built by the main CMakeLists.txt as the `ldf_example_json_export` target.
+// Built by the main CMakeLists.txt as the `ldf_json` target.
 
 #include "ldf/ldffile.h"
 #include "ldf/extract.h"

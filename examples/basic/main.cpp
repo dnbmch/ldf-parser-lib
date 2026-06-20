@@ -1,7 +1,7 @@
 // lib/examples/basic/main.cpp
 // Basic integration example: parse LDF file, walk extracted protobuf data.
 //
-// Built by the main CMakeLists.txt as the `ldf_example_basic` target; the
+// Built by the main CMakeLists.txt as the `ldf_basic` target; the
 // `ldf_example_basic` ctest entry runs it against a fixture LDF.
 
 #include "ldf/ldffile.h"

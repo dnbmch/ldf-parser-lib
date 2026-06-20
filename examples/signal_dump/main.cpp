@@ -4,7 +4,7 @@
 // Output format (TSV-like):
 //   SIGNAL_NAME  FRAME  ID  START_BIT  BITS  FACTOR  OFFSET  UNIT  PUBLISHER  ENCODING
 //
-// Built by the main CMakeLists.txt as the `ldf_example_signal_dump` target.
+// Built by the main CMakeLists.txt as the `ldf_signal_dump` target.
 
 #include "ldf/ldffile.h"
 #include "ldf/extract.h"
