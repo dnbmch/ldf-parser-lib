@@ -15,7 +15,7 @@ namespace ldffile {
 struct RawSignal {
     std::string name;
     uint32_t bit_length = 0;
-    int64_t init_value = 0;
+    std::vector<int64_t> init_values;   // one element for scalar, all for array
     std::string publisher;
     std::vector<std::string> subscribers;
 };
@@ -57,8 +57,26 @@ struct RawSignalRepresentation {
     std::vector<std::string> signal_names;
 };
 
+// Kind of a schedule entry. A schedule entry is either a regular frame slot or
+// one of the LIN 2.x / ISO 17987 diagnostic commands.
+enum class ScheduleCommandKind {
+    Frame = 0,            // command names a regular frame
+    AssignNad,
+    ConditionalChangeNad,
+    AssignFrameId,
+    AssignFrameIdRange,
+    UnassignFrameId,
+    DataDump,
+    SaveConfiguration,
+    FreeFormat,
+    AssignNadViaSnpd,
+    AssignNadViaJ2602,
+};
+
 struct RawScheduleEntry {
-    std::string command;            // frame name or diagnostic command text
+    ScheduleCommandKind kind = ScheduleCommandKind::Frame;
+    std::string frame_name;              // set when kind == Frame
+    std::vector<std::string> arguments;  // diagnostic-command brace tokens
     double delay_ms = 0.0;
 };
 
@@ -136,6 +154,21 @@ struct RawDiagnosticFrame {
 };
 
 // ---------------------------------------------------------------------------
+// Parse-time diagnostics
+// ---------------------------------------------------------------------------
+
+enum class DiagnosticSeverity {
+    Warning = 1,   // lossy/guessed value; parsing continued
+    Dropped = 2,   // a record or section was skipped entirely
+};
+
+struct RawDiagnostic {
+    std::string location;   // section / record name
+    std::string message;
+    DiagnosticSeverity severity = DiagnosticSeverity::Warning;
+};
+
+// ---------------------------------------------------------------------------
 // Top-level container
 // ---------------------------------------------------------------------------
 
@@ -159,6 +192,8 @@ struct LdfFile {
     std::vector<RawSignalGroup> signal_groups;
     std::vector<RawDiagnosticSignal> diagnostic_signals;   // ISO 17987
     std::vector<RawDiagnosticFrame> diagnostic_frames;     // ISO 17987
+
+    std::vector<RawDiagnostic> diagnostics;   // lossy/guessed parse events
 };
 
 // ---------------------------------------------------------------------------

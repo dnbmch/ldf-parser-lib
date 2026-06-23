@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
         std::cerr << "Failed to parse: " << argv[1] << "\n";
         return 1;
     }
-    ldf::LdfFile file = ldf::extract::extractFile(raw.get());
+    ldf::LdfFile file = ldf::extract::extractFile(*raw);
 
     // Header
     printRow("SIGNAL", "FRAME", 0, 0, 0, "FACTOR", "OFFSET", "UNIT", "PUBLISHER", "ENCODING");
@@ -71,8 +71,18 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        printRow(sig.name(), sig.frame_name(), sig.frame_id(),
-                 sig.start_bit(), sig.bit_length(),
+        // A signal may belong to several frames; show its first placement.
+        std::string frameName;
+        uint32_t frameId = 0, startBit = 0;
+        if (sig.frame_memberships_size() > 0) {
+            const auto& fm = sig.frame_memberships(0);
+            frameName = fm.frame_name();
+            frameId = fm.frame_id();
+            startBit = fm.start_bit();
+        }
+
+        printRow(sig.name(), frameName, frameId,
+                 startBit, sig.bit_length(),
                  factor, offset, unit, sig.publisher(), encName);
     }
 

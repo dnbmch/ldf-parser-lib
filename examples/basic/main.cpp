@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Step 2: Extract into typed protobuf messages
-    ldf::LdfFile file = ldf::extract::extractFile(raw.get());
+    ldf::LdfFile file = ldf::extract::extractFile(*raw);
 
     // Step 3: Walk the extracted data
     std::cout << "=== LDF File Summary ===\n";

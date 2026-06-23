@@ -14,3 +14,17 @@ enum NodeRole {
   NODE_ROLE_MASTER = 1;
   NODE_ROLE_SLAVE = 2;
 }
+
+// Severity of a parse-time diagnostic
+enum Severity {
+  SEVERITY_UNSPECIFIED = 0;
+  WARNING = 1;   // lossy/guessed value; extraction continued
+  DROPPED = 2;   // a record or section was skipped entirely
+}
+
+// A single lossy/guessed event recorded during extraction
+message Diagnostic {
+  string location = 1;   // best available: line number / section / record name
+  string message = 2;
+  Severity severity = 3;
+}

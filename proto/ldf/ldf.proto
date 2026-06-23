@@ -22,6 +22,9 @@ message LdfFile {
   repeated SignalGroup signal_groups = 15;
   repeated DiagnosticSignal diagnostic_signals = 16;   // ISO 17987
   repeated DiagnosticFrame diagnostic_frames = 17;     // ISO 17987
+
+  repeated Diagnostic diagnostics = 18;   // lossy/guessed parse events
+  uint32 schema_version = 19;
 }
 
 // LIN bus node (master or slave)
@@ -55,6 +58,7 @@ message NodeAttributes {
   double response_tolerance_pct = 12;  // e.g. 38 %
   double wakeup_time_ms = 13;
   double poweron_time_ms = 14;
+  bool has_initial_nad = 15;           // distinguishes unset from explicit 0
 }
 
 message ConfigurableFrame {
@@ -63,19 +67,29 @@ message ConfigurableFrame {
   bool has_message_id = 3;
 }
 
+// Frame placement of a signal. A signal may appear in multiple frames (legal in
+// LIN), so membership is a repeated record rather than a flattened last-wins.
+message FrameMembership {
+  string frame_name = 1;
+  uint32 frame_id = 2;
+  uint32 start_bit = 3;
+}
+
 // Signal definition from Signals section
 message Signal {
+  reserved 3, 6, 7, 8;
+  reserved "init_value", "frame_name", "frame_id", "start_bit";
+
   string name = 1;
   uint32 bit_length = 2;
-  int64 init_value = 3;
   string publisher = 4;
   repeated string subscribers = 5;
-  // Enriched from Frames section
-  string frame_name = 6;
-  uint32 frame_id = 7;
-  uint32 start_bit = 8;
   // Enriched from Signal_encoding_types via Signal_representation
   SignalEncoding encoding = 9;
+  // Init value: one element for scalar signals, all elements for array signals
+  repeated int64 init_values = 10;
+  // Enriched from Frames section; one entry per frame the signal appears in
+  repeated FrameMembership frame_memberships = 11;
 }
 
 // Physical + logical encoding for a signal
@@ -125,9 +139,34 @@ message ScheduleTable {
   repeated ScheduleEntry entries = 2;
 }
 
+// A typed diagnostic schedule command (LIN 2.x / ISO 17987). The argument list
+// is whatever appeared inside the command's brace block, in source order; the
+// spec corpus only pins argument semantics for a subset, so arguments are kept
+// as raw tokens rather than per-command typed fields.
+message DiagnosticCommand {
+  enum Type {
+    DIAGNOSTIC_COMMAND_TYPE_UNSPECIFIED = 0;
+    ASSIGN_NAD = 1;
+    CONDITIONAL_CHANGE_NAD = 2;
+    ASSIGN_FRAME_ID = 3;
+    ASSIGN_FRAME_ID_RANGE = 4;
+    UNASSIGN_FRAME_ID = 5;
+    DATA_DUMP = 6;
+    SAVE_CONFIGURATION = 7;
+    FREE_FORMAT = 8;
+    ASSIGN_NAD_VIA_SNPD = 9;     // SNPD address-resolution variant
+    ASSIGN_NAD_VIA_J2602 = 10;   // J2602 address-resolution variant
+  }
+  Type type = 1;
+  repeated string arguments = 2;   // raw tokens from the command's brace block
+}
+
 message ScheduleEntry {
-  string command = 1;                  // frame name or diagnostic command
   double delay_ms = 2;
+  oneof command {
+    string frame_name = 1;                        // schedule a regular frame
+    DiagnosticCommand diagnostic_command = 3;     // schedule a diagnostic command
+  }
 }
 
 // Event-triggered frame definition

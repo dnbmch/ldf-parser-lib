@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
         std::cerr << "Failed to parse: " << argv[1] << "\n";
         return 1;
     }
-    ldf::LdfFile file = ldf::extract::extractFile(raw.get());
+    ldf::LdfFile file = ldf::extract::extractFile(*raw);
 
     // Configure JSON output
     google::protobuf::util::JsonPrintOptions opts;
