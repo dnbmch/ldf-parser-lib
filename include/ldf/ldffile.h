@@ -12,6 +12,7 @@ namespace ldffile {
 // Raw structs mirroring LDF sections (populated by parser, consumed by extract)
 // ---------------------------------------------------------------------------
 
+/// One LIN signal: name, bit length, per-byte init values, and publisher/subscribers.
 struct RawSignal {
     std::string name;
     uint32_t bit_length = 0;
@@ -20,11 +21,13 @@ struct RawSignal {
     std::vector<std::string> subscribers;
 };
 
+/// A signal's placement inside a frame: signal name and its start bit.
 struct RawFrameSignal {
     std::string signal_name;
     uint32_t start_bit = 0;
 };
 
+/// One LIN frame: id, publisher, byte length (0 = unspecified), and member signals.
 struct RawFrame {
     std::string name;
     uint32_t id = 0;
@@ -33,6 +36,7 @@ struct RawFrame {
     std::vector<RawFrameSignal> signals;
 };
 
+/// One piecewise physical range: raw min/max mapped by factor/offset, with a unit.
 struct RawPhysicalValue {
     uint64_t min_raw = 0;
     uint64_t max_raw = 0;
@@ -41,17 +45,20 @@ struct RawPhysicalValue {
     std::string unit;
 };
 
+/// One logical (enum) encoding: a raw value and its textual description.
 struct RawLogicalValue {
     int64_t value = 0;
     std::string description;
 };
 
+/// A named encoding: its piecewise physical ranges and logical value entries.
 struct RawSignalEncodingType {
     std::string name;
     std::vector<RawPhysicalValue> physical_values;  // piecewise ranges
     std::vector<RawLogicalValue> logical_values;
 };
 
+/// Binds an encoding name to the signals that use it.
 struct RawSignalRepresentation {
     std::string encoding_name;
     std::vector<std::string> signal_names;
@@ -73,6 +80,7 @@ enum class ScheduleCommandKind {
     AssignNadViaJ2602,
 };
 
+/// One schedule-table slot: a frame or a typed diagnostic command, plus its delay.
 struct RawScheduleEntry {
     ScheduleCommandKind kind = ScheduleCommandKind::Frame;
     std::string frame_name;              // set when kind == Frame
@@ -80,11 +88,13 @@ struct RawScheduleEntry {
     double delay_ms = 0.0;
 };
 
+/// A named schedule table and its ordered entries.
 struct RawScheduleTable {
     std::string name;
     std::vector<RawScheduleEntry> entries;
 };
 
+/// One LIN node: master/slave role, timing, and J2602 master extensions.
 struct RawNode {
     std::string name;
     bool is_master = false;
@@ -95,12 +105,14 @@ struct RawNode {
     double duty_cycle_pct = 0.0;
 };
 
+/// A configurable frame entry: frame name and an optional assigned message id.
 struct RawConfigurableFrame {
     std::string frame_name;
     uint32_t message_id = 0;
     bool has_message_id = false;
 };
 
+/// Per-node attributes: protocol, NAD, timing, configurable frames, and J2602 extensions.
 struct RawNodeAttributes {
     std::string node_name;
     std::string lin_protocol;
@@ -121,6 +133,7 @@ struct RawNodeAttributes {
     double poweron_time_ms = 0.0;
 };
 
+/// An event-triggered frame: collision resolver, id, and associated unconditional frames.
 struct RawEventTriggeredFrame {
     std::string name;
     std::string collision_resolver;
@@ -128,11 +141,13 @@ struct RawEventTriggeredFrame {
     std::vector<std::string> associated_frames;
 };
 
+/// Maps a node name to its diagnostic node address (NAD).
 struct RawDiagnosticAddress {
     std::string node_name;
     uint32_t nad = 0;
 };
 
+/// A named signal group and its member signals.
 struct RawSignalGroup {
     std::string name;
     uint32_t group_size = 0;
@@ -141,12 +156,14 @@ struct RawSignalGroup {
 
 // ISO 17987 diagnostic types
 
+/// ISO 17987 diagnostic signal: name, bit length, and init value.
 struct RawDiagnosticSignal {
     std::string name;
     uint32_t bit_length = 0;
     int64_t init_value = 0;
 };
 
+/// ISO 17987 diagnostic frame: id and member signals.
 struct RawDiagnosticFrame {
     std::string name;
     uint32_t id = 0;
@@ -162,6 +179,7 @@ enum class DiagnosticSeverity {
     Dropped = 2,   // a record or section was skipped entirely
 };
 
+/// One parse-time diagnostic: source location, message, and severity.
 struct RawDiagnostic {
     std::string location;   // section / record name
     std::string message;
@@ -172,6 +190,7 @@ struct RawDiagnostic {
 // Top-level container
 // ---------------------------------------------------------------------------
 
+/// Parsed LDF: global header fields, all section vectors, and parse diagnostics.
 struct LdfFile {
     std::string lin_protocol_version;
     std::string lin_language_version;
