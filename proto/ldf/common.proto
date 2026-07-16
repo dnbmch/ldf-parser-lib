@@ -1,13 +1,6 @@
 syntax = "proto3";
 package ldf;
 
-// Signal encoding value type
-enum SignalValueType {
-  SIGNAL_VALUE_TYPE_UNSPECIFIED = 0;
-  SIGNAL_VALUE_TYPE_SCALAR = 1;       // single numeric signal
-  SIGNAL_VALUE_TYPE_BYTE_ARRAY = 2;   // array init value {0, 0, ...}
-}
-
 // Node role on the LIN bus
 enum NodeRole {
   NODE_ROLE_UNSPECIFIED = 0;

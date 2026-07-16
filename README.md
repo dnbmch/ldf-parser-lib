@@ -51,7 +51,7 @@ cmake --build build
 #include "ldf/extract.h"
 
 auto file = ldffile::Loader::readLdfFile("path/to/file.ldf");
-ldf::LdfFile result = ldf::extract::extractFile(file.get());
+ldf::LdfFile result = ldf::extract::extractFile(*file);
 
 for (const auto& frame : result.frames()) {
     // Access signals, encodings, schedule tables, etc.
