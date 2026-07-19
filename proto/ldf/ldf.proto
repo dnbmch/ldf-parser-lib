@@ -98,6 +98,8 @@ message SignalEncoding {
   string encoding_name = 1;
   repeated PhysicalValue physical_values = 2;  // piecewise ranges
   repeated LogicalValue logical_values = 3;
+  bool bcd_value = 4;    // signal carries BCD digits (keyword-only encoding)
+  bool ascii_value = 5;  // signal carries ASCII characters (keyword-only encoding)
 }
 
 message PhysicalValue {
@@ -132,6 +134,8 @@ message SignalEncodingType {
   string name = 1;
   repeated PhysicalValue physical_values = 2;  // piecewise ranges
   repeated LogicalValue logical_values = 3;
+  bool bcd_value = 4;    // keyword-only bcd_value encoding
+  bool ascii_value = 5;  // keyword-only ascii_value encoding
 }
 
 // Schedule table from Schedule_tables section

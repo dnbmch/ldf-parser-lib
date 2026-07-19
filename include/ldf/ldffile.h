@@ -52,10 +52,14 @@ struct RawLogicalValue {
 };
 
 /// A named encoding: its piecewise physical ranges and logical value entries.
+/// `bcd_value` / `ascii_value` are the keyword-only encodings; they carry no
+/// parameters and are mutually exclusive with physical/logical entries.
 struct RawSignalEncodingType {
     std::string name;
     std::vector<RawPhysicalValue> physical_values;  // piecewise ranges
     std::vector<RawLogicalValue> logical_values;
+    bool bcd_value = false;
+    bool ascii_value = false;
 };
 
 /// Binds an encoding name to the signals that use it.
