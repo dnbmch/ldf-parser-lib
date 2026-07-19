@@ -133,6 +133,13 @@ struct RawNodeAttributes {
     double poweron_time_ms = 0.0;
 };
 
+/// A sporadic frame: a group of unconditional frames sharing one frame slot.
+/// The section declares no frame id of its own.
+struct RawSporadicFrame {
+    std::string name;
+    std::vector<std::string> associated_frames;
+};
+
 /// An event-triggered frame: collision resolver, id, and associated unconditional frames.
 struct RawEventTriggeredFrame {
     std::string name;
@@ -206,6 +213,7 @@ struct LdfFile {
     std::vector<RawSignalRepresentation> signal_representations;
     std::vector<RawScheduleTable> schedule_tables;
     std::vector<RawNodeAttributes> node_attributes;
+    std::vector<RawSporadicFrame> sporadic_frames;
     std::vector<RawEventTriggeredFrame> event_triggered_frames;
     std::vector<RawDiagnosticAddress> diagnostic_addresses;
     std::vector<RawSignalGroup> signal_groups;

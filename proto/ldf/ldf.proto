@@ -25,6 +25,7 @@ message LdfFile {
 
   repeated Diagnostic diagnostics = 18;   // lossy/guessed parse events
   uint32 schema_version = 19;
+  repeated SporadicFrame sporadic_frames = 20;   // LIN 2.0+
 }
 
 // LIN bus node (master or slave)
@@ -167,6 +168,14 @@ message ScheduleEntry {
     string frame_name = 1;                        // schedule a regular frame
     DiagnosticCommand diagnostic_command = 3;     // schedule a diagnostic command
   }
+}
+
+// Sporadic frame definition: a group of unconditional frames sharing one frame
+// slot. Carries no frame id; when several associated frames are pending, the
+// first listed wins.
+message SporadicFrame {
+  string name = 1;
+  repeated string associated_frames = 2;
 }
 
 // Event-triggered frame definition
