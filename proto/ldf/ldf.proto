@@ -120,7 +120,9 @@ message Frame {
   string name = 1;
   uint32 id = 2;                       // LIN frame ID (0-63)
   string publisher = 3;
-  uint32 length = 4;                   // frame length in bytes (0 = unspecified)
+  // Frame length in bytes: as declared, or for a LIN 1.x frame that declares none,
+  // the length its id fixes (2, 4 or 8). 0 = unspecified.
+  uint32 length = 4;
   repeated FrameSignal signals = 5;
 }
 
